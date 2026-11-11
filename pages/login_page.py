@@ -63,6 +63,9 @@ class LoginPage(BasePage):
     def identifier_label_text(self) -> str:
         return self.find(*self.IDENTIFIER_LABEL).text
 
+    def identifier_value(self) -> str:
+        return self.find(*self.IDENTIFIER_INPUT).get_attribute("value")
+
     def login(self, identifier: str, password: str, mode: str = "email"):
         """Fluxo completo: abre /login, escolhe o modo, preenche e envia."""
         self.open_login()
