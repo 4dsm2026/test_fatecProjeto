@@ -41,13 +41,23 @@ def test_login_with_wrong_password_shows_inline_error(driver):
     assert "/login" in driver.current_url
 
 
-def test_mode_switches_automatically_when_typing_ra(driver):
-    """Digitar algo sem '@' no campo identificador troca o modo para RA."""
+def test_mode_does_not_switch_while_typing(driver):
+    """Verifica frontend#242: digitar um e-mail ainda sem '@' não troca a aba sozinho."""
     page = LoginPage(driver).open_login()
     assert "Email institucional" in page.identifier_label_text()
 
-    page.fill_identifier("123456789")
+    page.fill_identifier("ana.costa")
+    assert "Email institucional" in page.identifier_label_text()
+
+
+def test_switching_mode_clears_identifier(driver):
+    """Verifica frontend#242: a aba muda só pelo clique, e trocar de aba limpa o campo."""
+    page = LoginPage(driver).open_login()
+    page.fill_identifier("ana.costa")
+
+    page.switch_to_ra_mode()
     assert "Registro de Aluno" in page.identifier_label_text()
+    assert page.identifier_value() == ""
 
 
 def test_submit_disabled_with_short_password(driver):
